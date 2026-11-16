@@ -1,4 +1,4 @@
-*{box-sizing:border-box;margin:0;padding:0}
+*{box-sizing:border-box;margin:0;padding:0} 
 :root{--bg:#0c0821;--panel:#15102e;--text:#f7f4ff;--muted:#b9b2d0;--purple:#8d4cf5;--blue:#4777f5;--green:#16bd68}
 html{scroll-behavior:smooth;scroll-padding-top:90px}
 body{font-family:Inter,Arial,sans-serif;background:#fff;color:#17142a;line-height:1.65}
