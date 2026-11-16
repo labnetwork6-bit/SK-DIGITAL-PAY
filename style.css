@@ -116,3 +116,85 @@ h1{font-size:clamp(46px,5.2vw,70px);line-height:1.09;letter-spacing:-3.4px;margi
 .services-section .service-card a{color:#c5a6ff}
 .services-section .service-card a:hover{color:#fff}
 .services-section .service-card:focus-within{box-shadow:0 16px 38px #03020c55}
+
+/* =================================
+   SK DIGITAL PAY BD
+   LIGHT PURPLE PAYMENT SECTION
+================================= */
+
+.payment-section {
+  background: linear-gradient(
+    135deg,
+    #F7F1FF 0%,
+    #EDE2FF 50%,
+    #F5F0FF 100%
+  ) !important;
+  color: #271444 !important;
+  padding: 65px 20px;
+}
+
+.payment-section h1,
+.payment-section h2,
+.payment-section h3 {
+  color: #271444 !important;
+}
+
+.payment-section p {
+  color: #716080 !important;
+}
+
+.payment-methods {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.payment-section .pay-method {
+  background: #FFFFFF !important;
+  color: #271444 !important;
+  border: 1px solid #E4D5FA !important;
+  border-radius: 18px;
+  padding: 22px;
+  box-shadow: 0 8px 25px rgba(111, 67, 170, 0.09);
+  transition: all 0.3s ease;
+}
+
+.payment-section .pay-method:hover {
+  transform: translateY(-6px);
+  border-color: #9560ED !important;
+  box-shadow: 0 14px 30px rgba(111, 67, 170, 0.17);
+}
+
+.payment-section .pay-method b {
+  color: #271444 !important;
+}
+
+.payment-section .pay-method small {
+  color: #77678A !important;
+}
+
+.payment-section .pay-method img {
+  object-fit: contain;
+}
+
+@media (max-width: 720px) {
+  .payment-section {
+    padding: 45px 15px;
+  }
+
+  .payment-methods {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+
+  .payment-section .pay-method {
+    padding: 15px;
+  }
+}
+
+@media (max-width: 380px) {
+  .payment-methods {
+    grid-template-columns: 1fr;
+  }
+}
+
