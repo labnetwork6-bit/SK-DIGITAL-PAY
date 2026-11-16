@@ -198,3 +198,99 @@ h1{font-size:clamp(46px,5.2vw,70px);line-height:1.09;letter-spacing:-3.4px;margi
   }
 }
 
+/* SK DIGITAL PAY BD - PREMIUM GLASS PAYMENT */
+.payment-section {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 10% 20%, #482080 0, transparent 38%),
+    radial-gradient(circle at 90% 85%, #173e86 0, transparent 40%),
+    linear-gradient(135deg, #100927, #0c0821 65%, #111039) !important;
+}
+
+.payment-section .section-kicker {
+  color: #c5a5ff !important;
+}
+
+.payment-section .payment-layout h2 {
+  color: #fff !important;
+}
+
+.payment-section .payment-layout h2 span {
+  background: linear-gradient(90deg, #b46aff, #6596ff);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.payment-section .payment-layout p {
+  color: #c4badb !important;
+}
+
+.payment-section .payment-methods {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.payment-section .pay-method {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  padding: 20px 17px;
+  min-width: 0;
+  border-radius: 17px;
+  border: 1px solid rgba(190, 160, 255, .25) !important;
+  background: rgba(255, 255, 255, .075) !important;
+  color: #fff !important;
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .2);
+  transition: .3s ease;
+}
+
+.payment-section .pay-method:hover {
+  transform: translateY(-5px);
+  border-color: #a477ff !important;
+  background: rgba(255, 255, 255, .13) !important;
+  box-shadow: 0 15px 35px rgba(120, 75, 230, .25);
+}
+
+.payment-section .pay-method b {
+  color: #fff !important;
+  font-size: 15px;
+}
+
+.payment-section .pay-method small {
+  color: #c8bddf !important;
+  font-size: 11px;
+}
+
+.payment-section .pay-logo {
+  flex-shrink: 0;
+  box-shadow: 0 5px 18px rgba(0, 0, 0, .25);
+}
+
+@media (max-width: 720px) {
+  .payment-section .payment-layout {
+    gap: 28px;
+  }
+
+  .payment-section .payment-methods {
+    gap: 11px;
+  }
+
+  .payment-section .pay-method {
+    padding: 15px 11px;
+    gap: 9px;
+  }
+}
+
+@media (max-width: 380px) {
+  .payment-section .payment-methods {
+    grid-template-columns: 1fr;
+  }
+}
+
+
