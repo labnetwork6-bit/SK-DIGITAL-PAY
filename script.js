@@ -1,42 +1,89 @@
-// SK DIGITAL PAY BD — shared WhatsApp order handling
-// Bangladesh international format: country code + number, without + or spaces.
-const WHATSAPP_NUMBER = "8801775099284";
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0c0821;--panel:#15102e;--text:#f7f4ff;--muted:#b9b2d0;--purple:#8d4cf5;--blue:#4777f5;--green:#16bd68}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{font-family:Inter,Arial,sans-serif;background:#fff;color:#17142a;line-height:1.65}
+a{text-decoration:none;color:inherit}.container{width:min(1180px,calc(100% - 48px));margin:auto}
+.site-header{height:76px;background:#100927;color:#fff;position:sticky;top:0;z-index:20;border-bottom:1px solid rgba(255,255,255,.07)}
+.nav-wrap,.main-nav,.brand{display:flex;align-items:center}.nav-wrap{height:100%;justify-content:space-between}.brand{gap:11px;font-size:17px;font-weight:800;letter-spacing:-.4px}.brand b{color:#7777ff}.brand-mark{width:40px;height:40px;border-radius:13px;background:linear-gradient(135deg,#8551ef,#4079f5);display:grid;place-items:center;font-size:15px}
+.main-nav{gap:30px;color:#c9c2dc;font-size:14px;font-weight:600}.main-nav a:hover{color:#fff}.nav-order{background:linear-gradient(110deg,#19d56b,#109b58);color:#fff!important;padding:11px 18px;border-radius:12px;box-shadow:0 8px 24px #0c9e5840}.wa-icon{margin-right:7px}.menu-toggle{display:none;background:none;border:0;color:white;font-size:26px}
+.hero{position:relative;overflow:hidden;background:radial-gradient(ellipse at 7% 22%,#45217e 0,transparent 37%),radial-gradient(ellipse at 89% 65%,#1b3d88 0,transparent 36%),radial-gradient(ellipse at 48% 100%,#3b1049 0,transparent 45%),#0c0821;color:var(--text);min-height:590px;padding:78px 0 70px}
+.hero-glow{position:absolute;filter:blur(80px);border-radius:50%;opacity:.22;pointer-events:none}.glow-left{width:250px;height:250px;background:#a23fff;left:-100px;top:130px}.glow-right{width:300px;height:300px;background:#286bff;right:-100px;bottom:0}
+.hero-grid{position:relative;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:38px}.eyebrow{display:inline-flex;align-items:center;gap:9px;border:1px solid #9a5aff55;background:#7139a633;color:#c7a8ff;padding:7px 14px;border-radius:30px;font-size:13px;font-weight:800;letter-spacing:.5px}.eyebrow span{width:9px;height:9px;border-radius:50%;background:#19d67b;box-shadow:0 0 0 5px #19d67b22}
+h1{font-size:clamp(46px,5.2vw,70px);line-height:1.09;letter-spacing:-3.4px;margin:25px 0 22px;font-weight:900}h1 span,.payment-layout h2 span,.why-layout h2 span{background:linear-gradient(95deg,#a64cff,#427df8);background-clip:text;-webkit-background-clip:text;color:transparent}
+.hero-description{max-width:590px;color:#bdb4d3;font-size:18px;line-height:1.7}.hero-actions{display:flex;gap:13px;margin-top:29px}.btn{display:inline-flex;align-items:center;justify-content:center;gap:13px;padding:13px 21px;border-radius:11px;font-size:14px;font-weight:800;transition:.2s}.btn:hover{transform:translateY(-2px)}.btn-primary{background:linear-gradient(110deg,#9450f5,#496ef3);color:white;box-shadow:0 10px 25px #7144df45}.btn-outline{border:1px solid #ffffff35;color:white;background:#ffffff08}.trust-row{display:flex;align-items:center;gap:9px;color:#a9a1c1;font-size:11px;margin-top:29px}.trust-row i{height:4px;width:4px;border-radius:50%;background:#655b7e;margin:0 5px}.trust-dot{color:#35dc91}
+.hero-art{height:390px;position:relative;display:grid;place-items:center}.payment-card{width:min(370px,90%);height:230px;border-radius:24px;padding:29px 25px;background:linear-gradient(120deg,#7435e9,#536cf0 85%);box-shadow:0 30px 70px #03020c88;transform:rotate(-1.5deg);position:relative;z-index:2;overflow:hidden}.payment-card:before{content:"";position:absolute;inset:0;background:repeating-linear-gradient(115deg,transparent 0 30px,#ffffff0c 31px 55px)}.card-top,.card-bottom{position:relative;display:flex;align-items:center;justify-content:space-between}.card-top strong{font-size:13px;letter-spacing:1px}.chip{width:44px;height:33px;border-radius:9px;background:linear-gradient(135deg,#ffe27c,#d98a16);box-shadow:inset 0 0 0 1px #fff5}.card-number{position:relative;font-size:22px;letter-spacing:3px;margin-top:39px;color:#fff}.card-bottom{margin-top:27px;font-size:8px;letter-spacing:1px;line-height:1.5}.card-bottom b{font-size:10px}.visa{font-size:24px;font-weight:900;font-style:italic}.service-float,.secure-float{position:absolute;z-index:3;background:#17112e;border:1px solid #ffffff20;box-shadow:0 15px 35px #0004;border-radius:17px;color:white}.service-float{top:12px;left:-5px;padding:13px 16px;display:flex;align-items:center;gap:13px}.service-float strong,.service-float small{display:block}.service-float strong{font-size:13px}.service-float small{font-size:11px;color:#bdb4d3}.star-icon{width:36px;height:36px;border-radius:11px;background:#ff8612;display:grid;place-items:center}.secure-float{bottom:14px;right:0;padding:12px 16px;font-size:11px;color:#d8d0ed}.secure-float span{color:#29d88d;margin-right:7px}.orbit{position:absolute;border:1px solid #9b70ff2a;border-radius:50%;width:390px;height:260px;transform:rotate(-22deg)}
+.section{padding:90px 0}.section-heading{text-align:center;margin-bottom:42px}.section-kicker{font-size:11px;font-weight:900;letter-spacing:1.8px;color:#8751e9}.section-heading h2,.payment-layout h2,.why-layout h2{font-size:clamp(32px,4vw,45px);line-height:1.2;letter-spacing:-1.8px;margin:10px 0}.section-heading p,.payment-layout p,.why-layout p{color:#77748a;font-size:15px}.service-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}.service-card{padding:29px;border:1px solid #ece9f4;border-radius:18px;box-shadow:0 12px 35px #21134b08;transition:.2s}.service-card:hover{transform:translateY(-5px);box-shadow:0 18px 40px #21134b12}.service-icon{width:49px;height:49px;border-radius:14px;display:grid;place-items:center;font-size:23px;margin-bottom:20px}.orange{background:#fff0df;color:#ff8b19}.blue{background:#e9efff;color:#456ff0}.purple{background:#f2eaff;color:#9050e9}.service-card h3{font-size:19px;margin-bottom:8px}.service-card p{color:#77748a;font-size:14px;min-height:70px}.service-card a{display:inline-block;color:#7444d7;font-weight:800;font-size:13px;margin-top:15px}.service-card a span{margin-left:7px}
+.payment-section{background:#f8f6fc}.payment-layout,.why-layout{display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:70px}.payment-layout p,.why-layout p{max-width:470px;margin-top:14px}.payment-methods{display:grid;grid-template-columns:1fr 1fr;gap:14px}.pay-method{display:flex;align-items:center;gap:13px;background:white;border:1px solid #eeeaf5;border-radius:14px;padding:17px}.pay-method b,.pay-method small{display:block}.pay-method b{font-size:14px}.pay-method small{font-size:10px;color:#8b8798}.pay-logo{width:39px;height:39px;border-radius:11px;display:grid;place-items:center;color:white;font-weight:900;font-size:21px}.bkash{background:#df287a}.nagad{background:#ed6d25}.rocket{background:#8738b8}.bank{background:#3e70df}
+.steps-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:25px}.step{border-top:2px solid #e7ddf8;padding:24px 18px}.step>span{font-size:13px;font-weight:900;color:#8b4be7}.step h3{font-size:18px;margin:10px 0 6px}.step p{font-size:14px;color:#77748a}
+.why-section{background:#100a29;color:white}.why-layout p{color:#b7afcb}.why-points{display:grid;grid-template-columns:1fr 1fr;gap:17px}.why-points div{display:flex;align-items:center;gap:12px;background:#ffffff09;border:1px solid #ffffff13;padding:17px;border-radius:13px;font-size:13px}.why-points span{color:#2fdf91;font-weight:900}
+.faq-container{max-width:850px}.faq-list details{border-bottom:1px solid #ece9f2;padding:19px 3px}.faq-list summary{list-style:none;cursor:pointer;font-size:15px;font-weight:700;display:flex;justify-content:space-between;gap:20px}.faq-list summary::-webkit-details-marker{display:none}.faq-list summary span{color:#8c4de8;font-size:21px}.faq-list details[open] summary span{transform:rotate(45deg)}.faq-list details p{color:#77748a;font-size:14px;padding:12px 28px 0 0}
+.contact-section{padding:25px 0 80px}.contact-box{border-radius:23px;padding:42px 48px;background:linear-gradient(110deg,#211044,#263d8b);color:white;display:flex;justify-content:space-between;align-items:center;gap:25px}.contact-box .section-kicker{color:#bca1ff}.contact-box h2{font-size:30px;letter-spacing:-1px;margin:7px 0}.contact-box p{color:#c4bdd8;font-size:14px}
+.site-footer{background:#0d0821;color:#b8b0ca;padding:25px 0}.footer-inner{display:flex;align-items:center;justify-content:space-between;gap:20px}.footer-inner p,.footer-inner>a:last-child{font-size:12px}.footer-inner>a:last-child{color:#c5a6ff}
+@media(max-width:900px){.main-nav{gap:16px;font-size:12px}.hero-grid{grid-template-columns:1fr  .85fr}.hero-art{transform:scale(.9)}h1{font-size:55px}.payment-layout,.why-layout{gap:35px}}
+@media(max-width:720px){.container{width:min(100% - 36px,540px)}.site-header{height:68px}.menu-toggle{display:block}.main-nav{display:none;position:absolute;top:68px;left:0;right:0;background:#100927;padding:18px 24px 24px;flex-direction:column;align-items:stretch;gap:0}.main-nav.open{display:flex}.main-nav a{padding:12px 0}.main-nav .nav-order{padding:12px 16px;text-align:center;margin-top:8px}.hero{padding:55px 0 45px}.hero-grid{grid-template-columns:1fr;gap:10px}.hero-copy{text-align:left}.hero-description{font-size:15px}.hero-art{height:310px;transform:none;margin-top:5px}.payment-card{width:310px;height:195px;padding:23px}.card-number{margin-top:28px;font-size:18px}.card-bottom{margin-top:20px}.service-float{left:0;top:0}.secure-float{right:0;bottom:0}h1{font-size:clamp(44px,12vw,60px);letter-spacing:-2.5px}.trust-row{flex-wrap:wrap}.section{padding:65px 0}.service-grid,.steps-grid,.pricing-grid{grid-template-columns:1fr}.service-card p{min-height:0}.payment-layout,.why-layout{grid-template-columns:1fr;gap:28px}.payment-methods{gap:10px}.pay-method{padding:12px}.why-points{grid-template-columns:1fr}.contact-box{padding:30px 24px;align-items:flex-start;flex-direction:column}.contact-box h2{font-size:26px}.footer-inner{flex-direction:column;text-align:center}.section-heading{margin-bottom:30px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
 
-const menuToggle = document.getElementById("menuToggle");
-const mainNav = document.getElementById("mainNav");
-
-if (menuToggle && mainNav) {
-  menuToggle.addEventListener("click", () => {
-    const isOpen = mainNav.classList.toggle("open");
-    menuToggle.setAttribute("aria-expanded", String(isOpen));
-    menuToggle.textContent = isOpen ? "×" : "☰";
-  });
-  mainNav.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      mainNav.classList.remove("open");
-      menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.textContent = "☰";
-    });
-  });
+/* Pricing section — dark purple/blue theme */
+.pricing-section{
+  position:relative;
+  overflow:hidden;
+  color:#f7f4ff;
+  background:
+    radial-gradient(ellipse at 8% 10%,#432078 0,transparent 34%),
+    radial-gradient(ellipse at 92% 85%,#1b3b83 0,transparent 36%),
+    linear-gradient(145deg,#100927 0%,#0c0821 58%,#111039 100%);
 }
-
-function whatsappUrl(message) {
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`;
+.pricing-section .section-heading h2{color:#fff}
+.pricing-section .section-heading p{color:#b9b2d0;max-width:660px;margin:0 auto}
+.pricing-section .section-kicker{color:#c2a5ff}
+.pricing-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:22px;align-items:stretch}
+.pricing-card{
+  position:relative;
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  padding:30px 27px 27px;
+  border:1px solid #ffffff1c;
+  border-radius:20px;
+  background:linear-gradient(155deg,#211842eF,#15112fF2);
+  box-shadow:0 18px 45px #03020c45;
+  transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease;
 }
-
-const whatsappButton = document.getElementById("whatsappButton");
-if (whatsappButton) {
-  whatsappButton.href = whatsappUrl("Assalamu Alaikum, I want to know more about SK DIGITAL PAY BD services.");
+.pricing-card:hover{transform:translateY(-5px);border-color:#9b70ff88;box-shadow:0 22px 52px #03020c66}
+.pricing-featured{border:1.5px solid #9868f4;box-shadow:0 18px 52px #7144df30, inset 0 1px #ffffff12}
+.popular-tag{
+  position:absolute;top:17px;right:17px;
+  max-width:calc(100% - 34px);
+  border:1px solid #a77aff55;border-radius:30px;
+  padding:5px 10px;background:#7041b933;color:#d9c5ff;
+  font-size:9px;font-weight:900;letter-spacing:.7px;
 }
+.pricing-icon{width:47px;height:47px;border-radius:14px;display:grid;place-items:center;font-size:22px;margin-bottom:17px;flex:0 0 auto}
+.pricing-label{font-size:9px;font-weight:900;letter-spacing:1.4px;color:#bda0ff}
+.pricing-card h3{font-size:20px;line-height:1.3;margin:7px 0 9px;color:#fff}
+.pricing-description{font-size:13px;line-height:1.65;color:#b9b2d0;min-height:64px}
+.price-line{display:flex;flex-direction:column;gap:4px;border-top:1px solid #ffffff19;border-bottom:1px solid #ffffff19;padding:17px 0;margin:17px 0}
+.price-line strong{font-size:21px;line-height:1.35;letter-spacing:-.4px;color:#fff;overflow-wrap:anywhere}
+.price-line span{font-size:10px;color:#a69cbe}
+.pricing-features{list-style:none;display:grid;gap:9px;margin:0 0 23px;padding:0}
+.pricing-features li{font-size:12px;color:#d2cce1}
+.pricing-features li:before{content:"✓";color:#35dc91;font-weight:900;margin-right:9px}
+.btn-price{width:100%;margin-top:auto;background:linear-gradient(110deg,#9450f5,#496ef3);color:#fff;box-shadow:0 9px 22px #7144df40}
+.btn-price:focus-visible{outline:3px solid #c8a9ff;outline-offset:3px}
+.pricing-note{margin:23px auto 0;text-align:center;color:#aaa2c2;font-size:11px;line-height:1.6;max-width:780px}
+@media(max-width:900px) and (min-width:721px){.pricing-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.pricing-card:last-child{grid-column:1/-1}}
+@media(max-width:720px){.pricing-grid{grid-template-columns:1fr;gap:16px}.pricing-card{padding:26px 23px}.pricing-description{min-height:0}.pricing-featured{order:-1}}
 
-document.querySelectorAll(".service-order").forEach((button) => {
-  button.addEventListener("click", (event) => {
-    event.preventDefault();
-    const service = button.dataset.service || "SK DIGITAL PAY BD service";
-    const message = `Assalamu Alaikum, I want to order ${service}. Please share the current price and details.`;
-    window.open(whatsappUrl(message), "_blank", "noopener,noreferrer");
-  });
-});
 
-const year = document.getElementById("year");
-if (year) year.textContent = new Date().getFullYear();
+/* Premium finishing touches */
+.site-header{backdrop-filter:blur(14px);background:rgba(16,9,39,.94)}
+.brand{white-space:nowrap}
+.service-card,.pay-method,.step,.faq-list details{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.service-card:focus-within,.pay-method:hover{transform:translateY(-3px);box-shadow:0 16px 38px #21134b12}
+.service-card h5{font-size:13px;line-height:1.9;color:#6c42b7;background:#f8f5ff;border:1px solid #eee6ff;border-radius:12px;padding:11px 13px;margin:12px 0}
+.floating-whatsapp{position:fixed;right:22px;bottom:22px;z-index:30;display:flex;align-items:center;gap:9px;padding:13px 18px;border-radius:999px;background:linear-gradient(110deg,#19c96b,#079c57);color:#fff;font-size:13px;font-weight:800;box-shadow:0 12px 30px #079c5750;transition:transform .2s,box-shadow .2s}
+.floating-whatsapp:hover{transform:translateY(-4px);box-shadow:0 16px 34px #079c5766}
+.floating-whatsapp span{font-size:18px}
+:focus-visible{outline:3px solid #9d75ff;outline-offset:3px}
+@media(max-width:720px){.floating-whatsapp{right:14px;bottom:14px;padding:12px 15px}.service-card h5{font-size:12px}}
+@media(prefers-reduced-motion:no-preference){.hero-copy,.hero-art{animation:soft-enter .65s ease both}.hero-art{animation-delay:.12s}@keyframes soft-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}}
