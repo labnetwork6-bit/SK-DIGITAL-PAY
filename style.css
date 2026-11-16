@@ -1,4 +1,4 @@
-*{box-sizing:border-box;margin:0;padding:0} 
+*{box-sizing:border-box;margin:0;padding:0}
 :root{--bg:#0c0821;--panel:#15102e;--text:#f7f4ff;--muted:#b9b2d0;--purple:#8d4cf5;--blue:#4777f5;--green:#16bd68}
 html{scroll-behavior:smooth;scroll-padding-top:90px}
 body{font-family:Inter,Arial,sans-serif;background:#fff;color:#17142a;line-height:1.65}
@@ -87,3 +87,32 @@ h1{font-size:clamp(46px,5.2vw,70px);line-height:1.09;letter-spacing:-3.4px;margi
 :focus-visible{outline:3px solid #9d75ff;outline-offset:3px}
 @media(max-width:720px){.floating-whatsapp{right:14px;bottom:14px;padding:12px 15px}.service-card h5{font-size:12px}}
 @media(prefers-reduced-motion:no-preference){.hero-copy,.hero-art{animation:soft-enter .65s ease both}.hero-art{animation-delay:.12s}@keyframes soft-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}}
+
+/* Dark premium theme for the Services section */
+.services-section{
+  position:relative;
+  overflow:hidden;
+  color:#f7f4ff;
+  background:
+    radial-gradient(ellipse at 8% 12%,#432078 0,transparent 34%),
+    radial-gradient(ellipse at 92% 88%,#1b3b83 0,transparent 36%),
+    linear-gradient(145deg,#100927 0%,#0c0821 58%,#111039 100%);
+}
+.services-section .section-heading h2{color:#fff}
+.services-section .section-heading p{color:#b9b2d0}
+.services-section .section-kicker{color:#c2a5ff}
+.services-section .service-card{
+  background:linear-gradient(155deg,#211842ef,#15112ff2);
+  border:1px solid #ffffff1c;
+  color:#f7f4ff;
+  box-shadow:0 18px 45px #03020c35;
+}
+.services-section .service-card:hover{
+  border-color:#9b70ff88;
+  box-shadow:0 22px 52px #03020c55;
+}
+.services-section .service-card h3{color:#fff}
+.services-section .service-card p{color:#b9b2d0}
+.services-section .service-card a{color:#c5a6ff}
+.services-section .service-card a:hover{color:#fff}
+.services-section .service-card:focus-within{box-shadow:0 16px 38px #03020c55}
