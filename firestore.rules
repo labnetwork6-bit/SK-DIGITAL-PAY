@@ -1,0 +1,38 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.uid == "KfzMEgsvo9hyx45Qt5EjXJujOef2";
+    }
+
+    match /reviews/{reviewId} {
+      // Public visitors can read only reviews approved by the admin.
+      allow read: if isAdmin()
+        || (resource.data.status == "approved");
+
+      // Anyone can submit a review, but it must start as pending.
+      allow create: if request.resource.data.keys().hasAll([
+          "name", "rating", "comment", "status", "createdAt"
+        ])
+        && request.resource.data.keys().hasOnly([
+          "name", "rating", "comment", "status", "createdAt"
+        ])
+        && request.resource.data.name is string
+        && request.resource.data.name.size() > 0
+        && request.resource.data.name.size() <= 60
+        && request.resource.data.rating is int
+        && request.resource.data.rating >= 1
+        && request.resource.data.rating <= 5
+        && request.resource.data.comment is string
+        && request.resource.data.comment.size() > 0
+        && request.resource.data.comment.size() <= 1000
+        && request.resource.data.status == "pending"
+        && request.resource.data.createdAt == request.time;
+
+      // Only the configured admin can approve, reject, edit, or delete reviews.
+      allow update, delete: if isAdmin();
+    }
+  }
+}

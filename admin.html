@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Review Admin | SK DIGITAL PAY BD</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    *{box-sizing:border-box}body{margin:0;padding:32px 18px;background:#0c0821;color:#f7f4ff;font-family:Inter,Arial,sans-serif}
+    .wrap{max-width:1000px;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}
+    h1{font-size:26px;margin:0}p{color:#b9b2d0}.panel{padding:25px;border:1px solid #ffffff20;border-radius:18px;background:linear-gradient(155deg,#211842,#15112f);margin-bottom:20px}
+    input{width:100%;padding:13px;border-radius:9px;border:1px solid #ffffff2b;background:#0d0924;color:white;font:inherit;margin:7px 0 14px}
+    label{font-size:13px;color:#d8d0ed}.btn{border:0;border-radius:9px;padding:11px 16px;font-weight:700;cursor:pointer}
+    .primary{background:linear-gradient(110deg,#9450f5,#496ef3);color:white}.approve{background:#137d50;color:white}.reject{background:#8f3549;color:white}
+    .logout{background:#ffffff15;color:white}.review{border:1px solid #ffffff20;border-radius:13px;padding:18px;margin-top:13px;background:#ffffff08}
+    .review-head{display:flex;justify-content:space-between;gap:15px;flex-wrap:wrap}.stars{color:#ffbf47}.meta{font-size:11px;color:#a69cbe}
+    .comment{white-space:pre-wrap;overflow-wrap:anywhere;color:#e0d9ee}.actions{display:flex;gap:9px;margin-top:13px}
+    .status{color:#c5a6ff;font-size:12px}.notice{font-size:13px;min-height:20px;color:#c5a6ff}
+    [hidden]{display:none!important}@media(max-width:600px){.top{align-items:flex-start;flex-direction:column}.panel{padding:18px}}
+  </style>
+</head>
+<body>
+  <main class="wrap">
+    <div class="top"><div><h1>SK DIGITAL PAY BD</h1><p>Customer Review Management</p></div><button id="logoutBtn" class="btn logout" hidden>Log out</button></div>
+
+    <section class="panel" id="loginPanel">
+      <h2>Admin Login</h2>
+      <form id="loginForm">
+        <label for="email">Admin email</label>
+        <input id="email" type="email" autocomplete="username" required>
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+        <button class="btn primary" type="submit">Sign in</button>
+      </form>
+      <p class="notice" id="loginMessage" role="status"></p>
+    </section>
+
+    <section id="dashboard" hidden>
+      <div class="panel"><h2>Reviews</h2><p>Approve a review to publish it on the website, or reject it to keep it hidden.</p><p class="notice" id="dashboardMessage" role="status"></p></div>
+      <div id="adminReviewList"></div>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-app.js";
+    import {
+      getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut
+    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-auth.js";
+    import {
+      getFirestore, collection, query, orderBy, getDocs, doc, updateDoc
+    } from "https://www.gstatic.com/firebasejs/13.4.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBBxoaBitSHCpzzcxwQ_ZWpGeKVAFQTeGE",
+      authDomain: "sk-digital-pay.firebaseapp.com",
+      projectId: "sk-digital-pay",
+      storageBucket: "sk-digital-pay.firebasestorage.app",
+      messagingSenderId: "134362335828",
+      appId: "1:134362335828:web:982dd860d40ae1a348bbc1",
+      measurementId: "G-L0BEGMFHMP"
+    };
+    const ADMIN_UID = "KfzMEgsvo9hyx45Qt5EjXJujOef2";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    const loginPanel = document.getElementById("loginPanel");
+    const dashboard = document.getElementById("dashboard");
+    const loginMessage = document.getElementById("loginMessage");
+    const dashboardMessage = document.getElementById("dashboardMessage");
+    const reviewList = document.getElementById("adminReviewList");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    document.getElementById("loginForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      loginMessage.textContent = "Signing in...";
+      try {
+        await signInWithEmailAndPassword(
+          auth,
+          document.getElementById("email").value.trim(),
+          document.getElementById("password").value
+        );
+      } catch (error) {
+        console.error(error);
+        loginMessage.textContent = "Login failed. Check your email and password.";
+      }
+    });
+
+    logoutBtn.addEventListener("click", () => signOut(auth));
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        loginPanel.hidden = false;
+        dashboard.hidden = true;
+        logoutBtn.hidden = true;
+        return;
+      }
+
+      if (user.uid !== ADMIN_UID) {
+        await signOut(auth);
+        loginMessage.textContent = "Access denied: this account is not the configured admin.";
+        return;
+      }
+
+      loginPanel.hidden = true;
+      dashboard.hidden = false;
+      logoutBtn.hidden = false;
+      await loadReviews();
+    });
+
+    async function loadReviews() {
+      reviewList.replaceChildren();
+      dashboardMessage.textContent = "Loading reviews...";
+      try {
+        const q = query(collection(db, "reviews"), orderBy("createdAt", "desc"));
+        const snapshot = await getDocs(q);
+
+        if (snapshot.empty) {
+          dashboardMessage.textContent = "There are no reviews yet.";
+          return;
+        }
+
+        dashboardMessage.textContent = `${snapshot.size} review(s) found.`;
+        snapshot.forEach((reviewDoc) => {
+          const data = reviewDoc.data();
+          const card = document.createElement("article");
+          card.className = "review";
+
+          const head = document.createElement("div");
+          head.className = "review-head";
+          const name = document.createElement("strong");
+          name.textContent = data.name || "Customer";
+          const stars = document.createElement("span");
+          stars.className = "stars";
+          stars.textContent = "★".repeat(Math.max(0, Math.min(5, Number(data.rating) || 0)));
+          head.append(name, stars);
+
+          const status = document.createElement("p");
+          status.className = "status";
+          status.textContent = `Status: ${data.status || "unknown"}`;
+
+          const comment = document.createElement("p");
+          comment.className = "comment";
+          comment.textContent = data.comment || "";
+
+          const actions = document.createElement("div");
+          actions.className = "actions";
+
+          if (data.status !== "approved") {
+            const approve = document.createElement("button");
+            approve.className = "btn approve";
+            approve.textContent = "Approve";
+            approve.addEventListener("click", () => updateStatus(reviewDoc.id, "approved", approve));
+            actions.appendChild(approve);
+          }
+
+          if (data.status !== "rejected") {
+            const reject = document.createElement("button");
+            reject.className = "btn reject";
+            reject.textContent = "Reject";
+            reject.addEventListener("click", () => updateStatus(reviewDoc.id, "rejected", reject));
+            actions.appendChild(reject);
+          }
+
+          card.append(head, status, comment, actions);
+          reviewList.appendChild(card);
+        });
+      } catch (error) {
+        console.error(error);
+        dashboardMessage.textContent = "Could not load reviews. Check your Firestore security rules.";
+      }
+    }
+
+    async function updateStatus(id, status, button) {
+      button.disabled = true;
+      try {
+        await updateDoc(doc(db, "reviews", id), { status });
+        await loadReviews();
+      } catch (error) {
+        console.error(error);
+        dashboardMessage.textContent = "Could not update this review. Check admin access and Firestore rules.";
+        button.disabled = false;
+      }
+    }
+  </script>
+</body>
+</html>
